@@ -13,8 +13,6 @@ function Login() {
     email: "",
     password: "",
   });
-  const { setToken } = useUser();
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setAdminLoginData((prev) => ({

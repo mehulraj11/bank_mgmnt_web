@@ -1,15 +1,14 @@
-import React from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
 import axios from "axios";
 import { useUser } from "../context/UserContext";
-
+import { useNavigate } from "react-router-dom";
 function User({ id, username, email }) {
+  const navigate = useNavigate();
+  const { setUser } = useUser();
   const handleClick = async () => {
-    const { token, setUser } = useUser();
-
     try {
+      const token = localStorage.getItem("token");
       const res = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/auth/${id}`,
         {
@@ -19,8 +18,8 @@ function User({ id, username, email }) {
         }
       );
       console.log("User fetched:", res.data);
+      navigate("/profile");
       setUser(res.data);
-      // You could show this in a modal or navigate if needed!
     } catch (error) {
       console.error("Fetch user error:", error.message);
     }

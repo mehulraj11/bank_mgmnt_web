@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Login from "./Login";
 import Dashboard from "./components/Dashboard";
+import Profile from "./components/Profile";
 function App() {
   return (
     <Router>
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" element={<Root />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
   );
@@ -22,7 +24,11 @@ function App() {
 const Root = () => {
   const isAuthenticated = localStorage.getItem("token");
 
-  return isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/login" />;
+  return isAuthenticated ? (
+    <Navigate to="/dashboard" />
+  ) : (
+    <Navigate to="/login" />
+  );
 };
 
 export default App;

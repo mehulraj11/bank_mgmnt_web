@@ -3,14 +3,14 @@ import Container from "react-bootstrap/Container";
 import Alert from "react-bootstrap/Alert";
 import axios from "axios";
 import User from "./Users";
-import { useUser } from "../context/UserContext";
 
 function Dashboard() {
   const [users, setUsers] = useState([]);
-  const { token } = useUser();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const token = localStorage.getItem("token");
         const res = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/auth/getusers`,
           {
@@ -29,7 +29,6 @@ function Dashboard() {
 
     fetchData();
   }, []);
-
   return (
     <Container className="mt-5">
       <h2 className="mb-4 text-center">List of Current Users</h2>

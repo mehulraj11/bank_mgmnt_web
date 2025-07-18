@@ -1,9 +1,11 @@
-import React from 'react'
+import React from "react";
+import { useUser } from "../context/UserContext";
 
 function Profile() {
-  return (
-    <div>Profile</div>
-  )
+  const { user } = useUser();
+  console.log(user);
+
+  return <div>Profile</div>;
 }
 
-export default Profile
+export default Profile;
