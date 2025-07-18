@@ -47,13 +47,27 @@ exports.login = async (req, res) => {
         }
 
         const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "20h" });
-        res.json({ token, user: { id: user._id, username: user.username } })
+        res.json({ token, user: { id: user._id, username: user.username, role: user.role } })
     } catch (error) {
         console.log("login error : ", error.message);
         res.status(500).json({ message: error.message })
     }
 }
-
+// get a single user
+exports.getUser = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+            res.status(404).json({ message: "user not found" })
+        }
+        res.status(200).json({ id: user._id, username: user.username, email: user.email, role: user.role })
+    } catch (error) {
+        console.log("error in getuser : ", error.message);
+        res.status(404).json({ message: "user found error" })
+    }
+}
+// route to list of all users
 exports.getUsers = async (req, res) => {
     try {
 

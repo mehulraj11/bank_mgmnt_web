@@ -1,0 +1,57 @@
+import React, { useEffect, useState } from "react";
+import Container from "react-bootstrap/Container";
+import Alert from "react-bootstrap/Alert";
+import axios from "axios";
+import User from "./Users";
+import { useUser } from "../context/UserContext";
+
+function Dashboard() {
+  const [users, setUsers] = useState([]);
+  const { token } = useUser();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/auth/getusers`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setUsers(res.data.users);
+        console.log(res.data.users);
+      } catch (error) {
+        console.log("data fetch error:", error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <Container className="mt-5">
+      <h2 className="mb-4 text-center">List of Current Users</h2>
+
+      {users && users.length > 0 ? (
+        <div className="d-flex flex-column gap-3">
+          {users.map((item) => (
+            <User
+              key={item._id}
+              id={item._id}
+              email={item.email}
+              username={item.username}
+            />
+          ))}
+        </div>
+      ) : (
+        <Alert variant="info" className="text-center">
+          No users found.
+        </Alert>
+      )}
+    </Container>
+  );
+}
+
+export default Dashboard;

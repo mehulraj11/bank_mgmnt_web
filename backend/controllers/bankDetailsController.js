@@ -59,7 +59,7 @@ exports.deleteBank = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
+// route to get all added banks into user's id
 exports.getBanks = async (req, res) => {
     try {
         const bankList = await Bank.find({ user: req.user.id })

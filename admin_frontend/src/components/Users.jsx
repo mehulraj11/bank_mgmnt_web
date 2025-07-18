@@ -1,0 +1,52 @@
+import React from "react";
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import axios from "axios";
+import { useUser } from "../context/UserContext";
+
+function User({ id, username, email }) {
+  const handleClick = async () => {
+    const { token, setUser } = useUser();
+
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/auth/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("User fetched:", res.data);
+      setUser(res.data);
+      // You could show this in a modal or navigate if needed!
+    } catch (error) {
+      console.error("Fetch user error:", error.message);
+    }
+  };
+  return (
+    <Card className="mb-3 shadow-sm">
+      <Card.Body className="d-flex justify-content-between align-items-center">
+        {/* Left: User Info */}
+        <div>
+          <Card.Title>{username}</Card.Title>
+          <Card.Subtitle className="mb-1 text-muted">ID: {id}</Card.Subtitle>
+          <Card.Text className="mb-0">Email: {email}</Card.Text>
+        </div>
+
+        {/* Right: Buttons */}
+        <div className="d-flex gap-3">
+          <Button variant="primary" size="md" onClick={handleClick}>
+            View
+          </Button>
+          <Button variant="danger" size="md">
+            Delete
+          </Button>
+        </div>
+      </Card.Body>
+    </Card>
+  );
+}
+
+export default User;
