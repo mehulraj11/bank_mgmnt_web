@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const dotenv = require('dotenv');
 const { connectDB } = require('./config/db');
 const userRoutes = require('./routes/userRoutes.js');
+const bankRoutes = require("./routes/bankRoutes.js")
 dotenv.config();
 const app = express();
 connectDB();
@@ -17,6 +18,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/api/auth", userRoutes)
+app.use("/api/bank", bankRoutes)
 app.listen(process.env.PORT, () => {
     console.log("server is running")
 })
