@@ -1,11 +1,9 @@
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
-import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
-function User({ id, username, email }) {
+function Users({ id, username, email, setCurrentUser }) {
   const navigate = useNavigate();
-  const { setUser } = useUser();
   const handleClick = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -18,8 +16,7 @@ function User({ id, username, email }) {
         }
       );
       console.log("User fetched:", res.data);
-      navigate("/profile");
-      setUser(res.data);
+      navigate(`/profile/${id}`); // Pass user ID in URL
     } catch (error) {
       console.error("Fetch user error:", error.message);
     }
@@ -48,4 +45,4 @@ function User({ id, username, email }) {
   );
 }
 
-export default User;
+export default Users;

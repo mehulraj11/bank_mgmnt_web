@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -9,13 +9,21 @@ import Login from "./Login";
 import Dashboard from "./components/Dashboard";
 import Profile from "./components/Profile";
 function App() {
+  const [currentUser, setCurrentUser] = useState({});
+
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Root />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/dashboard"
+          element={<Dashboard setCurrentUser={setCurrentUser} />}
+        />
+        <Route
+          path="/profile/:userId"
+          element={<Profile currentUser={currentUser} />}
+        />
       </Routes>
     </Router>
   );

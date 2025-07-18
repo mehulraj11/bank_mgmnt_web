@@ -6,7 +6,6 @@ import Card from "react-bootstrap/Card";
 import "./App.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "./context/UserContext";
 function Login() {
   const navigate = useNavigate();
   const [adminLoginData, setAdminLoginData] = useState({

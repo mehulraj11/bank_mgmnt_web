@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Alert from "react-bootstrap/Alert";
 import axios from "axios";
-import User from "./Users";
+import Users from "./Users";
 
-function Dashboard() {
+function Dashboard({ setCurrentUser }) {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -36,11 +36,12 @@ function Dashboard() {
       {users && users.length > 0 ? (
         <div className="d-flex flex-column gap-3">
           {users.map((item) => (
-            <User
+            <Users
               key={item._id}
               id={item._id}
               email={item.email}
               username={item.username}
+              setCurrentUser={setCurrentUser}
             />
           ))}
         </div>

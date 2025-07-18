@@ -8,5 +8,4 @@ router.get("/getusers", authorize, authorizeRoles("admin"), getUsers)
 router.get("/:id", authorize, authorizeRoles("admin"), getUser)
 router.post("/register", register);
 router.post("/login", login);
-router.post("/adminlogin", login);
 module.exports = router;
