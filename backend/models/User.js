@@ -4,7 +4,8 @@ const bcrypt = require("bcryptjs")
 const userSchema = mongoose.Schema({
     username: { type: String, unique: true, required: true },
     email: { type: String, unique: true, required: true },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    role: { type: String, default: "user", enum: ["user", "admin"] }
 })
 
 // pre-save hook of mongoose to hash password before saving into db

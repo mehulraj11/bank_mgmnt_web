@@ -18,5 +18,12 @@ const authorize = ((req, res, next) => {
     }
 
 })
-
-module.exports = authorize
+const authorizeRoles = (...role) => {
+    return (req, res, next) => {
+        if (!role.includes(req.user.role)) {
+            return res.status(403).json({ message: "Access denied" })
+        }
+        next();
+    }
+}
+module.exports = { authorize, authorizeRoles };
