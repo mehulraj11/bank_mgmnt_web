@@ -79,3 +79,24 @@ exports.getUsers = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
+
+exports.deleteUser = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const user = await User.findByIdAndDelete(id);
+        if (req.user.role !== "admin") {
+            return res.status(403).json("access denied")
+        }
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({
+            message: "User deleted successfully",
+            deletedUser: user,
+        });
+    } catch (error) {
+        console.log("user delete error:", error.message);
+        res.status(500).json({ message: error.message });
+    }
+};

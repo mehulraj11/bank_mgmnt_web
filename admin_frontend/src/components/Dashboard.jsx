@@ -29,6 +29,18 @@ function Dashboard({ setCurrentUser }) {
 
     fetchData();
   }, []);
+  const handleDeleteClick = async ({ id }) => {
+    try {
+      const token = localStorage.getItem("token");
+      axios.delete(`${import.meta.env.VITE_BACKEND_URL}/auth/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (error) {
+      console.error("Delete user error:", error.message);
+    }
+  };
   return (
     <Container className="mt-5">
       <h2 className="mb-4 text-center">List of Current Users</h2>
