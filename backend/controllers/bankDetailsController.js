@@ -1,5 +1,5 @@
 const Bank = require("../models/Bank");
-
+const User = require('../models/User');
 
 exports.addDetails = async (req, res) => {
     const { ifscCode, branchName, bankName, accountNumber, accountHolderName } = req.body;
@@ -61,11 +61,20 @@ exports.deleteBank = async (req, res) => {
 };
 // route to get all added banks into user's id
 exports.getBanks = async (req, res) => {
+    const id = req.params.id;
+
     try {
-        const bankList = await Bank.find({ user: req.user.id })
-        res.status(200).json({ bankList })
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        const bankList = await Bank.find({ user: id });
+        res.status(200).json({
+            user,
+            bankList,
+        });
     } catch (error) {
-        console.log("get bank list error : ", error.message);
-        res.status(500).json({ message: error.message })
+        console.log("get bank list error:", error.message);
+        res.status(500).json({ message: error.message });
     }
-}
+};
