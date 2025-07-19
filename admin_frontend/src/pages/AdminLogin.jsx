@@ -3,10 +3,9 @@ import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import "./App.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-function Login() {
+function AdminLogin() {
   const navigate = useNavigate();
   const [adminLoginData, setAdminLoginData] = useState({
     email: "",
@@ -32,13 +31,12 @@ function Login() {
         }
       );
       console.log(res.data.user.role);
-      if (res.data.user.role !== "admin") {
-        alert("only admins are allowed to login");
-        return;
+      if (res.data.user.role === "admin") {
+        navigate("/login/admin/dashboard");
+      } else {
+        navigate("/login/user/dashboard");
       }
-      //   alert("welcome admin");
       localStorage.setItem("token", res.data.token);
-      navigate("/dashboard");
     } catch (error) {
       console.log("login error : ", error.message);
     }
@@ -82,4 +80,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default AdminLogin;

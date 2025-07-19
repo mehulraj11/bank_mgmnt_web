@@ -5,8 +5,11 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Login from "./Login";
-import Dashboard from "./components/Dashboard";
+import LoginHandler from "./pages/LoginHandler";
+import AdminLogin from "./pages/AdminLogin";
+import UserLogin from "./pages/UserLogin";
+import AdminDashboard from "./components/AdminDashboard";
+import UserDashboard from "./components/UserDashboard";
 import Profile from "./components/Profile";
 function App() {
   const [currentUser, setCurrentUser] = useState({});
@@ -15,10 +18,16 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Root />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<LoginHandler />} />
+        <Route path="/login/admin" element={<AdminLogin />} />
+        <Route path="/login/user" element={<UserLogin />} />
         <Route
-          path="/dashboard"
-          element={<Dashboard setCurrentUser={setCurrentUser} />}
+          path="/login/admin/dashboard"
+          element={<AdminDashboard setCurrentUser={setCurrentUser} />}
+        />
+        <Route
+          path="/login/user/dashboard"
+          element={<UserDashboard setCurrentUser={setCurrentUser} />}
         />
         <Route
           path="/profile/:userId"

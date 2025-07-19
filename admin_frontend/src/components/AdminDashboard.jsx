@@ -4,7 +4,7 @@ import Alert from "react-bootstrap/Alert";
 import axios from "axios";
 import Users from "./Users";
 
-function Dashboard({ setCurrentUser }) {
+function AdminDashboard({ setCurrentUser }) {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -66,4 +66,4 @@ function Dashboard({ setCurrentUser }) {
   );
 }
 
-export default Dashboard;
+export default AdminDashboard;
