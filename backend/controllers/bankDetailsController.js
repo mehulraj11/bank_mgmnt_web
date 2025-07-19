@@ -21,7 +21,21 @@ exports.addDetails = async (req, res) => {
 
     }
 }
+exports.getBank = async (req, res) => {
+    const id = req.user.id;
+    try {
+        console.log(req.user);
 
+        const bankData = await Bank.find({ user: id });
+        console.log(bankData);
+
+        res.status(200).json(bankData)
+    } catch (error) {
+        console.log("Getting bank data error : ", error.message);
+        res.status(500).json({ message: error.message })
+
+    }
+}
 exports.editDetails = async (req, res) => {
     const id = req.params.id;
     const updatedFields = req.body;

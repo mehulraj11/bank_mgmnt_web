@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
-function AddBank() {
+function AddBank({ handleAddBankClick }) {
   const [formData, setFormData] = useState({
     accountNumber: "",
     accountHolderName: "",
@@ -82,6 +82,9 @@ function AddBank() {
 
         <Button variant="primary" type="submit">
           Save Bank Details
+        </Button>
+        <Button variant="danger" onClick={handleAddBankClick}>
+          Close
         </Button>
       </Form>
     </Container>

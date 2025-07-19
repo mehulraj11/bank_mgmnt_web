@@ -1,67 +1,64 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Card, Button, Row, Col } from "react-bootstrap";
 import AddBank from "./AddBank";
+import BankDetails from "./BankDetails";
+import axios from "axios";
 
 function UserDashboard() {
   // Example: current bank details (you'll fetch from API in real app)
-  const [bankDetails, setBankDetails] = useState({
-    accountNumber: "1234567890",
-    accountHolderName: "Mehul Raj",
-    ifscCode: "HDFC0001234",
-    bankName: "HDFC Bank",
-    bankBranch: "Noida Sector 62",
-  });
-
+  const [bankList, setBankList] = useState([]);
+  const [bank, setBank] = useState(false);
   const [showAddBank, setShowAddBank] = useState(false);
 
   const handleAddBankClick = () => {
-    setShowAddBank(true);
+    setShowAddBank(!showAddBank);
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/bank/all`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setBankList(response.data);
+        setBank(true);
+        console.log(response);
 
+        console.log(bankList);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchData();
+  }, []);
   return (
-    <Container className="mt-5">
-      <h2 style={{ textAlign: "center" }}>User Dashboard</h2>
-
-      <Card className="mt-4">
-        <Card.Header>Bank Details</Card.Header>
-        <Card.Body>
-          <Row className="mb-2">
-            <Col>
-              <strong>Account Number:</strong> {bankDetails.accountNumber}
-            </Col>
-          </Row>
-          <Row className="mb-2">
-            <Col>
-              <strong>Account Holder Name:</strong>{" "}
-              {bankDetails.accountHolderName}
-            </Col>
-          </Row>
-          <Row className="mb-2">
-            <Col>
-              <strong>IFSC Code:</strong> {bankDetails.ifscCode}
-            </Col>
-          </Row>
-          <Row className="mb-2">
-            <Col>
-              <strong>Bank Name:</strong> {bankDetails.bankName}
-            </Col>
-          </Row>
-          <Row className="mb-2">
-            <Col>
-              <strong>Bank Branch:</strong> {bankDetails.bankBranch}
-            </Col>
-          </Row>
-        </Card.Body>
-      </Card>
-
-      <div className="mt-4 text-end">
+    <>
+      {bank && <h2 className="text-center">Bank Deatils</h2>}
+      <div className="mt-4 text-center">
         <Button variant="primary" onClick={handleAddBankClick}>
           Add Bank
         </Button>
       </div>
 
-      {showAddBank && <AddBank />}
-    </Container>
+      {showAddBank && <AddBank handleAddBankClick={handleAddBankClick} />}
+
+      {!showAddBank &&
+        bankList.map((item) => (
+          <BankDetails
+            key={item._id}
+            accountHolderName={item.accountHolderName}
+            accountNumber={item.accountNumber}
+            bankName={item.bankName}
+            branchName={item.branchName}
+            ifscCode={item.ifscCode}
+          />
+        ))}
+    </>
   );
 }
 
