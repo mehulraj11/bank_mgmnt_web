@@ -14,6 +14,7 @@ import Profile from "./components/Admin/Profile";
 import UpdateBank from "./components/User/UpdateBank";
 import AdminUser from "./components/Admin/AdminUser";
 import AdminBankData from "./components/Admin/AdminBankData";
+import Register from "./pages/Register";
 function App() {
   const [currentUser, setCurrentUser] = useState({});
 
@@ -24,6 +25,7 @@ function App() {
         <Route path="/login" element={<LoginHandler />} />
         <Route path="/login/admin" element={<AdminLogin />} />
         <Route path="/login/user" element={<UserLogin />} />
+        <Route path="/createuser" element={<Register />} />
         <Route
           path="/login/admin/dashboard"
           element={<AdminDashboard setCurrentUser={setCurrentUser} />}

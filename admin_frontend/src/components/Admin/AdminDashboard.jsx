@@ -3,14 +3,17 @@ import { useNavigate } from "react-router-dom";
 
 function AdminDashboard() {
   const navigate = useNavigate();
-
+  const role = localStorage.getItem("role");
   // handle logout : clear local storage & redirects to login page
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     navigate("/login");
   };
-
+  const handleRegister = () => {
+    if (role !== "admin") return;
+    navigate("/createuser");
+  };
   return (
     <>
       <Container className="mt-5 text-center">
@@ -23,7 +26,7 @@ function AdminDashboard() {
               className="rounded-pill px-4 fw-semibold shadow-sm"
               onClick={() => navigate("/login/admin/dashboard/user")}
             >
-              User Data
+              View User Data
             </Button>
           </Col>
           <Col xs="auto">
@@ -33,13 +36,23 @@ function AdminDashboard() {
               className="rounded-pill px-4 fw-semibold shadow-sm"
               onClick={() => navigate("/login/admin/dashboard/bank")}
             >
-              Bank Data
+              View Bank Data
+            </Button>
+          </Col>
+          <Col xs="auto">
+            <Button
+              variant="warning"
+              size="lg"
+              className="rounded-pill px-4 fw-semibold shadow-sm"
+              onClick={handleRegister}
+            >
+              Create a user
             </Button>
           </Col>
         </Row>
         <div className="d-flex justify-content-center mt-5">
           <Button
-            variant="warning"
+            variant="danger"
             size="lg"
             className="rounded-pill px-4 fw-semibold shadow-sm"
             onClick={handleLogout}
