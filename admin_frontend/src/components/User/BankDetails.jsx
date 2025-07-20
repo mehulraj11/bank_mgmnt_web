@@ -67,14 +67,18 @@ function BankDetails({
           {role !== "admin" && (
             <div className="d-flex justify-content-end gap-3 mt-4">
               <Button
-                variant="warning"
-                className="rounded-pill px-4 py-2 fw-semibold"
+                variant="outline-warning"
+                size="md"
+                className="rounded-pill fw-semibold px-4 mx-2"
+                onClick={() => handleUpdate(id)}
               >
                 Update
               </Button>
               <Button
-                variant="danger"
-                className="rounded-pill px-4 py-2 fw-semibold"
+                variant="outline-danger"
+                size="md"
+                className="rounded-pill fw-semibold px-4 mx-2"
+                onClick={() => handleDelete(id)}
               >
                 Delete
               </Button>

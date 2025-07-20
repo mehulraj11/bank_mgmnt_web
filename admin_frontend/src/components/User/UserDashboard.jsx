@@ -25,7 +25,7 @@ function UserDashboard() {
             },
           }
         );
-        setBankList(response.data);
+        setBankList(response.data.data);
         setBank(true);
         console.log(response);
 
@@ -54,12 +54,6 @@ function UserDashboard() {
   return (
     <>
       {bank && <h2 className="text-center">Bank Deatils</h2>}
-      <div className="mt-4 text-center">
-        <Button variant="primary" onClick={handleAddBankClick}>
-          Add Bank
-        </Button>
-      </div>
-
       {showAddBank && (
         <AddBank
           handleAddBankClick={handleAddBankClick}
@@ -67,7 +61,7 @@ function UserDashboard() {
           setShowAddBank={setShowAddBank}
         />
       )}
-      <div style={{ maxHeight: "500px", overflowY: "auto" }}>
+      <div style={{ maxHeight: "600px", overflowY: "auto" }}>
         {!showAddBank &&
           bankList.map((item) => (
             <BankDetails
@@ -82,8 +76,21 @@ function UserDashboard() {
             />
           ))}
       </div>
-      <div className="d-flex justify-content-center mt-4">
-        <Button variant="warning" className="text-end" onClick={handleLogout}>
+      <div className="d-flex justify-content-center mt-3">
+        <Button
+          variant="outline-primary"
+          size="md"
+          className="rounded-pill fw-semibold px-4 mx-2"
+          onClick={handleAddBankClick}
+        >
+          Add Bank
+        </Button>
+        <Button
+          variant="outline-danger"
+          size="md"
+          className="rounded-pill fw-semibold px-4 mx-2"
+          onClick={handleLogout}
+        >
           Logout
         </Button>
       </div>

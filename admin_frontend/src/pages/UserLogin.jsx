@@ -43,41 +43,52 @@ function UserLogin() {
     }
   };
   return (
-    <Container
-      fluid
-      className="d-flex justify-content-center align-items-center min-vh-100 w-100 bg-light"
-    >
-      <Card className="p-4 shadow" style={{ width: "400px" }}>
-        <h2 className="mb-4 text-center">User Login</h2>
-        <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="formGroupEmail">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control
-              name="email"
-              type="email"
-              placeholder="Enter email"
-              value={adminLoginData.email}
-              onChange={handleChange}
-            />
-          </Form.Group>
+    <>
+      <Container
+        fluid
+        className="d-flex justify-content-center align-items-center min-vh-100 bg-light"
+      >
+        <Card
+          className="p-4 shadow rounded-4"
+          style={{ maxWidth: "400px", width: "100%" }}
+        >
+          <h2 className="mb-4 text-center fw-bold">User Login</h2>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3" controlId="formGroupEmail">
+              <Form.Label className="fw-semibold">Email address</Form.Label>
+              <Form.Control
+                name="email"
+                type="email"
+                placeholder="Enter email"
+                value={adminLoginData.email}
+                onChange={handleChange}
+                className="rounded-pill px-3 py-2"
+              />
+            </Form.Group>
 
-          <Form.Group className="mb-4" controlId="formGroupPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              name="password"
-              type="password"
-              placeholder="Password"
-              value={adminLoginData.password}
-              onChange={handleChange}
-            />
-          </Form.Group>
+            <Form.Group className="mb-4" controlId="formGroupPassword">
+              <Form.Label className="fw-semibold">Password</Form.Label>
+              <Form.Control
+                name="password"
+                type="password"
+                placeholder="Password"
+                value={adminLoginData.password}
+                onChange={handleChange}
+                className="rounded-pill px-3 py-2"
+              />
+            </Form.Group>
 
-          <Button variant="primary" type="submit" className="w-100">
-            Submit
-          </Button>
-        </Form>
-      </Card>
-    </Container>
+            <Button
+              variant="primary"
+              type="submit"
+              className="w-100 rounded-pill fw-semibold py-2"
+            >
+              Sign In
+            </Button>
+          </Form>
+        </Card>
+      </Container>
+    </>
   );
 }
 

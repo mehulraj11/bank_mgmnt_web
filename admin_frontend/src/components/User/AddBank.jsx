@@ -32,10 +32,11 @@ function AddBank({ handleAddBankClick, onAddSuccess, setShowAddBank }) {
           },
         }
       );
+      // const newBank = response.data;
+      // onAddSuccess(newBank);
       alert("Bank Added Succesfully");
-      const newBank = response.data;
       setShowAddBank(false);
-      onAddSuccess(newBank);
+      // navigate("/login/user/dashboard");
     } catch (error) {
       console.log(error.message);
     }
@@ -100,10 +101,20 @@ function AddBank({ handleAddBankClick, onAddSuccess, setShowAddBank }) {
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit">
+        <Button
+          variant="outline-success"
+          size="md"
+          className="rounded-pill fw-semibold px-4 mx-2"
+          type="submit"
+        >
           Save Bank Details
         </Button>
-        <Button variant="danger" className="mx-2" onClick={handleAddBankClick}>
+        <Button
+          variant="outline-danger"
+          size="md"
+          className="rounded-pill fw-semibold px-4 mx-2"
+          onClick={handleAddBankClick}
+        >
           Close
         </Button>
       </Form>
