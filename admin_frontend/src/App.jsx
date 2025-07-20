@@ -11,6 +11,7 @@ import UserLogin from "./pages/UserLogin";
 import AdminDashboard from "./components/AdminDashboard";
 import UserDashboard from "./components/UserDashboard";
 import Profile from "./components/Profile";
+import UpdateBank from "./components/UpdateBank";
 function App() {
   const [currentUser, setCurrentUser] = useState({});
 
@@ -30,6 +31,10 @@ function App() {
           element={<UserDashboard setCurrentUser={setCurrentUser} />}
         />
         <Route
+          path="/login/user/dashboard/update/:id"
+          element={<UpdateBank />}
+        />
+        <Route
           path="/profile/:userId"
           element={<Profile currentUser={currentUser} />}
         />
@@ -40,9 +45,10 @@ function App() {
 
 const Root = () => {
   const isAuthenticated = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
 
   return isAuthenticated ? (
-    <Navigate to="/dashboard" />
+    <Navigate to={`login/${role}/dashboard`} />
   ) : (
     <Navigate to="/login" />
   );

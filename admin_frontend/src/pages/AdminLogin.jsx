@@ -37,6 +37,7 @@ function AdminLogin() {
         navigate("/login/user/dashboard");
       }
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("role", res.data.user.role);
     } catch (error) {
       console.log("login error : ", error.message);
     }

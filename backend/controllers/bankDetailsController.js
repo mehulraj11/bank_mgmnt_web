@@ -17,16 +17,18 @@ exports.addDetails = async (req, res) => {
         await holder.save();
         res.status(201).json({ message: "holder created", holder })
     } catch (error) {
+        console.log(`add bank POST error : ${error.message}`);
+
         res.status(500).json({ message: "Server error" });
 
     }
 }
 exports.getBank = async (req, res) => {
-    const id = req.user.id;
+    const id = req.params.id;
     try {
         console.log(req.user);
 
-        const bankData = await Bank.find({ user: id });
+        const bankData = await Bank.findById(id);
         console.log(bankData);
 
         res.status(200).json(bankData)
@@ -36,24 +38,14 @@ exports.getBank = async (req, res) => {
 
     }
 }
-exports.editDetails = async (req, res) => {
-    const id = req.params.id;
-    const updatedFields = req.body;
+exports.getBanks = async (req, res) => {
+    const id = req.user.id
 
     try {
-        const updatedBank = await Bank.findByIdAndUpdate(
-            id,
-            { $set: updatedFields },
-            { new: true, runValidators: true }
-        );
-
-        if (!updatedBank) {
-            return res.status(404).json({ message: "Bank detail not found." });
-        }
-
-        res.status(200).json({ message: "Bank detail updated.", updatedBank });
+        const data = await Bank.find({ user: id });
+        res.status(200).json(data)
     } catch (error) {
-        console.log("Edit error:", error.message);
+        console.log("get bank list error:", error.message);
         res.status(500).json({ message: error.message });
     }
 };
@@ -73,22 +65,47 @@ exports.deleteBank = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-// route to get all added banks into user's id
-exports.getBanks = async (req, res) => {
-    const id = req.params.id;
-
+exports.updateBank = async (req, res) => {
     try {
-        const user = await User.findById(id);
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
+        const bankId = req.params.id;
+        const updateFields = req.body;
+
+        const allowedFields = [
+            "accountNumber",
+            "accountHolderName",
+            "bankName",
+            "branchName",
+            "ifscCode",
+        ];
+
+        const updates = {};
+        for (const key of allowedFields) {
+            if (
+                updateFields[key] !== undefined &&
+                updateFields[key] !== null &&
+                updateFields[key] !== ""
+            ) {
+                updates[key] = updateFields[key];
+            }
         }
-        const bankList = await Bank.find({ user: id });
-        res.status(200).json({
-            user,
-            bankList,
-        });
+
+        if (Object.keys(updates).length === 0) {
+            return res.status(400).json({ message: "No valid fields to update." });
+        }
+
+        const updatedBank = await Bank.findByIdAndUpdate(
+            bankId,
+            { $set: updates },
+            { new: true }
+        );
+
+        if (!updatedBank) {
+            return res.status(404).json({ message: "Bank not found" });
+        }
+
+        res.status(200).json(updatedBank);
     } catch (error) {
-        console.log("get bank list error:", error.message);
-        res.status(500).json({ message: error.message });
+        console.error("Error updating bank:", error);
+        res.status(500).json({ message: "Server error" });
     }
 };

@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 function AddBank({ handleAddBankClick }) {
@@ -6,7 +7,7 @@ function AddBank({ handleAddBankClick }) {
     accountHolderName: "",
     ifscCode: "",
     bankName: "",
-    bankBranch: "",
+    branchName: "",
   });
 
   const handleChange = (e) => {
@@ -16,13 +17,26 @@ function AddBank({ handleAddBankClick }) {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/bank/add`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
     console.log("Form Data:", formData);
-    // TODO: Send formData to backend API here
   };
   return (
-    <Container className="mt-5">
+    <Container className="mt-3">
       <h2>Add Bank Details</h2>
       <Form onSubmit={handleSubmit} className="mt-4">
         <Form.Group className="mb-3">
@@ -73,8 +87,8 @@ function AddBank({ handleAddBankClick }) {
           <Form.Label>Bank Branch</Form.Label>
           <Form.Control
             type="text"
-            name="bankBranch"
-            value={formData.bankBranch}
+            name="branchName"
+            value={formData.branchName}
             onChange={handleChange}
             placeholder="Enter Bank Branch"
           />
@@ -83,7 +97,7 @@ function AddBank({ handleAddBankClick }) {
         <Button variant="primary" type="submit">
           Save Bank Details
         </Button>
-        <Button variant="danger" onClick={handleAddBankClick}>
+        <Button variant="danger" className="mx-2" onClick={handleAddBankClick}>
           Close
         </Button>
       </Form>

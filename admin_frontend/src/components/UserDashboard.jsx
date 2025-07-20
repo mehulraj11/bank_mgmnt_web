@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Container, Card, Button, Row, Col } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import AddBank from "./AddBank";
 import BankDetails from "./BankDetails";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function UserDashboard() {
-  // Example: current bank details (you'll fetch from API in real app)
   const [bankList, setBankList] = useState([]);
   const [bank, setBank] = useState(false);
   const [showAddBank, setShowAddBank] = useState(false);
-
+  const navigate = useNavigate();
   const handleAddBankClick = () => {
     setShowAddBank(!showAddBank);
   };
@@ -36,6 +36,17 @@ function UserDashboard() {
     };
     fetchData();
   }, []);
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+
+    navigate("/login");
+  };
+  const handleDeleteSuccess = (deletedId) => {
+    setBankList((prevBankList) =>
+      prevBankList.filter((bank) => bank._id !== deletedId)
+    );
+  };
   return (
     <>
       {bank && <h2 className="text-center">Bank Deatils</h2>}
@@ -46,18 +57,26 @@ function UserDashboard() {
       </div>
 
       {showAddBank && <AddBank handleAddBankClick={handleAddBankClick} />}
-
-      {!showAddBank &&
-        bankList.map((item) => (
-          <BankDetails
-            key={item._id}
-            accountHolderName={item.accountHolderName}
-            accountNumber={item.accountNumber}
-            bankName={item.bankName}
-            branchName={item.branchName}
-            ifscCode={item.ifscCode}
-          />
-        ))}
+      <div style={{ maxHeight: "500px", overflowY: "auto" }}>
+        {!showAddBank &&
+          bankList.map((item) => (
+            <BankDetails
+              key={item._id}
+              id={item._id}
+              accountHolderName={item.accountHolderName}
+              accountNumber={item.accountNumber}
+              bankName={item.bankName}
+              branchName={item.branchName}
+              ifscCode={item.ifscCode}
+              onDeleteSuccess={handleDeleteSuccess} 
+            />
+          ))}
+      </div>
+      <div className="d-flex justify-content-center mt-4">
+        <Button variant="warning" className="text-end" onClick={handleLogout}>
+          Logout
+        </Button>
+      </div>
     </>
   );
 }
