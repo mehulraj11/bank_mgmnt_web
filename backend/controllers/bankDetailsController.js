@@ -26,14 +26,17 @@ exports.addDetails = async (req, res) => {
 exports.getBank = async (req, res) => {
     const id = req.params.id;
     try {
-        console.log(req.user);
-
+        const user = await User.findById(req.user.id)
+        // console.log(user);
         const bankData = await Bank.findById(id);
-        console.log(bankData);
+        const userBankData = await Bank.find({ user: id })
+        console.log(userBankData);
 
-        res.status(200).json(bankData)
+        // console.log("user", user);
+
+        res.status(200).json({ bankData, user, userBankData })
     } catch (error) {
-        console.log("Getting bank data error : ", error.message);
+        console.log("Getting bank data error : ", error.message); ``
         res.status(500).json({ message: error.message })
 
     }
@@ -43,7 +46,8 @@ exports.getBanks = async (req, res) => {
 
     try {
         const data = await Bank.find({ user: id });
-        res.status(200).json(data)
+        const allBank = await Bank.find();
+        res.status(200).json({ data, allBank })
     } catch (error) {
         console.log("get bank list error:", error.message);
         res.status(500).json({ message: error.message });

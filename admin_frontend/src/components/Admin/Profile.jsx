@@ -1,11 +1,12 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
-import BankDetails from "./BankDetails";
+import BankDetails from "../User/BankDetails";
 function Profile() {
+  const navigate = useNavigate();
   const { userId } = useParams();
   const [currentUser, setCurrentUser] = useState({});
   const [bankList, setBankList] = useState([]);
@@ -22,10 +23,11 @@ function Profile() {
             },
           }
         );
-        // console.log(res.data);
+        console.log(res.data);
 
         setCurrentUser(res.data.user);
-        setBankList(res.data.bankList);
+        // console.log(res.data.user)
+        setBankList(res.data.userBankData);
       } catch (error) {
         console.error("Fetch user error:", error.message);
       }
@@ -37,8 +39,10 @@ function Profile() {
   }, [userId]);
 
   // console.log(currentUser);
-  console.log(bankList);
-
+  // console.log(bankList);
+  const handleBackClick = () => {
+    navigate("/login/admin/dashboard");
+  };
   return (
     <Card
       style={{
@@ -61,19 +65,27 @@ function Profile() {
           <strong>Email:</strong> {currentUser.email}
         </ListGroup.Item>
         {bankList.map((item, index) => {
-          return <BankDetails
-            key={item._id}
-            accountNumber={item.accountNumber}
-            ifscCode={item.ifscCode}
-            branchName={item.branchName}
-            bankName={item.bankName}
-            accountHolderName={item.accountHolderName}
-          />;
+          return (
+            <BankDetails
+              key={item._id}
+              accountNumber={item.accountNumber}
+              ifscCode={item.ifscCode}
+              branchName={item.branchName}
+              bankName={item.bankName}
+              accountHolderName={item.accountHolderName}
+            />
+          );
         })}
       </ListGroup>
-      <Card.Footer className="text-center">
-        <Button variant="primary">Update Details</Button>
-      </Card.Footer>
+      <Card>
+        <Button
+          variant="primary"
+          onClick={() => navigate("/login/admin/dashboard/user")}
+          className="mx-2"
+        >
+          Go Back
+        </Button>
+      </Card>
     </Card>
   );
 }

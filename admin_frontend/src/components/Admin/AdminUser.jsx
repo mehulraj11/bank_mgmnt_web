@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import Container from "react-bootstrap/Container";
+import { useNavigate } from "react-router-dom";
 import Alert from "react-bootstrap/Alert";
+import { Container, Button } from "react-bootstrap";
 import axios from "axios";
 import Users from "./Users";
-
-function AdminDashboard({ setCurrentUser }) {
+function AdminUser({ setCurrentUser }) {
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -29,22 +30,14 @@ function AdminDashboard({ setCurrentUser }) {
 
     fetchData();
   }, []);
-  const handleDeleteClick = async ({ id }) => {
-    try {
-      const token = localStorage.getItem("token");
-      axios.delete(`${import.meta.env.VITE_BACKEND_URL}/auth/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    } catch (error) {
-      console.error("Delete user error:", error.message);
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    navigate("/login");
   };
   return (
     <Container className="mt-5">
       <h2 className="mb-4 text-center">List of Current Users</h2>
-
       {users && users.length > 0 ? (
         <div className="d-flex flex-column gap-3">
           {users.map((item) => (
@@ -62,8 +55,20 @@ function AdminDashboard({ setCurrentUser }) {
           No users found.
         </Alert>
       )}
+      <div className="d-flex justify-content-center">
+        <Button variant="danger" onClick={handleLogout}>
+          Log out
+        </Button>
+        <Button
+          variant="primary"
+          onClick={() => navigate("/login/admin/dashboard")}
+          className="mx-2"
+        >
+          Go Back
+        </Button>
+      </div>
     </Container>
   );
 }
 
-export default AdminDashboard;
+export default AdminUser;

@@ -8,10 +8,12 @@ import {
 import LoginHandler from "./pages/LoginHandler";
 import AdminLogin from "./pages/AdminLogin";
 import UserLogin from "./pages/UserLogin";
-import AdminDashboard from "./components/AdminDashboard";
-import UserDashboard from "./components/UserDashboard";
-import Profile from "./components/Profile";
-import UpdateBank from "./components/UpdateBank";
+import AdminDashboard from "./components/Admin/AdminDashboard";
+import UserDashboard from "./components/User/UserDashboard";
+import Profile from "./components/Admin/Profile";
+import UpdateBank from "./components/User/UpdateBank";
+import AdminUser from "./components/Admin/AdminUser";
+import AdminBankData from "./components/Admin/AdminBankData";
 function App() {
   const [currentUser, setCurrentUser] = useState({});
 
@@ -26,6 +28,8 @@ function App() {
           path="/login/admin/dashboard"
           element={<AdminDashboard setCurrentUser={setCurrentUser} />}
         />
+        <Route path="/login/admin/dashboard/user" element={<AdminUser />} />
+        <Route path="/login/admin/dashboard/bank" element={<AdminBankData />} />
         <Route
           path="/login/user/dashboard"
           element={<UserDashboard setCurrentUser={setCurrentUser} />}

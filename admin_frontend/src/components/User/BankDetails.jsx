@@ -11,6 +11,7 @@ function BankDetails({
   ifscCode,
   onDeleteSuccess,
 }) {
+  const role = localStorage.getItem("role");
   const navigate = useNavigate();
   const handleUpdate = (id) => {
     navigate(`/login/user/dashboard/update/${id}`);
@@ -58,15 +59,16 @@ function BankDetails({
               <strong>Bank Branch:</strong> {branchName}
             </Col>
           </Row>
-
-          <div className="d-flex justify-content-end gap-2 mt-3">
-            <Button variant="warning" onClick={() => handleUpdate(id)}>
-              Update
-            </Button>
-            <Button variant="danger" onClick={() => handleDelete(id)}>
-              Delete
-            </Button>
-          </div>
+          {role !== "admin" ? (
+            <div className="d-flex justify-content-end gap-2 mt-3">
+              <Button variant="warning" onClick={() => handleUpdate(id)}>
+                Update
+              </Button>
+              <Button variant="danger" onClick={() => handleDelete(id)}>
+                Delete
+              </Button>
+            </div>
+          ) : null}
         </Card.Body>
       </Card>
     </Container>

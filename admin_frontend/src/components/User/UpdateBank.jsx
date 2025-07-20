@@ -27,7 +27,7 @@ function UpdateBank() {
             },
           }
         );
-        setFetchedBankDetails(response.data);
+        setFetchedBankDetails(response.data.bankData);
       } catch (error) {
         console.log(error.message);
       }
