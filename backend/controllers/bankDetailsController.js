@@ -26,11 +26,11 @@ exports.addDetails = async (req, res) => {
 exports.getBank = async (req, res) => {
     const id = req.params.id;
     try {
-        const user = await User.findById(req.user.id)
-        // console.log(user);
+        const user = await Bank.find({ user: id }).populate("user")
+        // console.log("user", user);
         const bankData = await Bank.findById(id);
         const userBankData = await Bank.find({ user: id })
-        console.log(userBankData);
+        // console.log(userBankData);
 
         // console.log("user", user);
 

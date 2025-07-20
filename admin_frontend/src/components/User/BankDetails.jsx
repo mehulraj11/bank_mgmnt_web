@@ -30,45 +30,56 @@ function BankDetails({
     }
   };
   return (
-    <Container className="mt-3">
-      <Card className="mt-4">
-        <Card.Header>Bank Details</Card.Header>
-        <Card.Body>
-          <Row className="mb-2">
+    <Container className="mt-4">
+      <Card className="shadow rounded-4 border-0 overflow-hidden">
+        <Card.Header className="bg-primary bg-gradient text-white text-center fw-bold py-3">
+          Bank Details
+        </Card.Header>
+
+        <Card.Body className="bg-light">
+          <Row className="mb-3">
             <Col>
               <strong>Account Number:</strong> {accountNumber}
             </Col>
           </Row>
-          <Row className="mb-2">
+          <Row className="mb-3">
             <Col>
-              <strong>Account Holder Name:</strong> {accountHolderName}
+              <strong>Account Holder Name:</strong>{" "}
+              {accountHolderName.toUpperCase()}
             </Col>
           </Row>
-          <Row className="mb-2">
+          <Row className="mb-3">
             <Col>
-              <strong>IFSC Code:</strong> {ifscCode}
+              <strong>IFSC Code:</strong> {ifscCode.toUpperCase()}
             </Col>
           </Row>
-          <Row className="mb-2">
+          <Row className="mb-3">
             <Col>
-              <strong>Bank Name:</strong> {bankName}
+              <strong>Bank Name:</strong> {bankName.toUpperCase()}
             </Col>
           </Row>
-          <Row className="mb-2">
+          <Row className="mb-3">
             <Col>
-              <strong>Bank Branch:</strong> {branchName}
+              <strong>Bank Branch:</strong> {branchName.toUpperCase()}
             </Col>
           </Row>
-          {role !== "admin" ? (
-            <div className="d-flex justify-content-end gap-2 mt-3">
-              <Button variant="warning" onClick={() => handleUpdate(id)}>
+
+          {role !== "admin" && (
+            <div className="d-flex justify-content-end gap-3 mt-4">
+              <Button
+                variant="warning"
+                className="rounded-pill px-4 py-2 fw-semibold"
+              >
                 Update
               </Button>
-              <Button variant="danger" onClick={() => handleDelete(id)}>
+              <Button
+                variant="danger"
+                className="rounded-pill px-4 py-2 fw-semibold"
+              >
                 Delete
               </Button>
             </div>
-          ) : null}
+          )}
         </Card.Body>
       </Card>
     </Container>

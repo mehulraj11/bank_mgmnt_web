@@ -4,11 +4,13 @@ import Alert from "react-bootstrap/Alert";
 import { Container, Button } from "react-bootstrap";
 import axios from "axios";
 import Users from "./Users";
+
 function AdminUser({ setCurrentUser }) {
   const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]); // state to store fetched user list
 
   useEffect(() => {
+    // fetch user data
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -21,8 +23,9 @@ function AdminUser({ setCurrentUser }) {
             },
           }
         );
-        setUsers(res.data.users);
-        console.log(res.data.users);
+
+        setUsers(res.data.users.slice(1));
+        // console.log(res.data.users);
       } catch (error) {
         console.log("data fetch error:", error.message);
       }
@@ -30,39 +33,38 @@ function AdminUser({ setCurrentUser }) {
 
     fetchData();
   }, []);
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    navigate("/login");
-  };
+
   return (
     <Container className="mt-5">
-      <h2 className="mb-4 text-center">List of Current Users</h2>
-      {users && users.length > 0 ? (
-        <div className="d-flex flex-column gap-3">
-          {users.map((item) => (
-            <Users
-              key={item._id}
-              id={item._id}
-              email={item.email}
-              username={item.username}
-              setCurrentUser={setCurrentUser}
-            />
-          ))}
-        </div>
-      ) : (
-        <Alert variant="info" className="text-center">
-          No users found.
-        </Alert>
-      )}
-      <div className="d-flex justify-content-center">
-        <Button variant="danger" onClick={handleLogout}>
-          Log out
-        </Button>
+      <h2 className="bg-primary bg-gradient text-white text-center fw-bold py-1">
+        List of Current Users
+      </h2>
+      <div style={{ height: "500px", overflowY: "auto" }}>
+        {users && users.length > 0 ? (
+          <div className="d-flex flex-column gap-3">
+            {users.map((item) => (
+              <Users
+                key={item._id}
+                id={item._id}
+                email={item.email}
+                username={item.username}
+                setCurrentUser={setCurrentUser}
+              />
+            ))}
+          </div>
+        ) : (
+          <Alert variant="info" className="text-center">
+            No users found.
+          </Alert>
+        )}
+      </div>
+
+      <div className="d-flex justify-content-center mt-4 gap-3">
         <Button
-          variant="primary"
           onClick={() => navigate("/login/admin/dashboard")}
-          className="mx-2"
+          variant="outline-warning"
+          size="md"
+          className="rounded-pill fw-semibold px-4 mx-2"
         >
           Go Back
         </Button>

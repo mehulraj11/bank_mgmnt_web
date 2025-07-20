@@ -23,9 +23,9 @@ function Profile() {
             },
           }
         );
-        console.log(res.data);
+        // console.log(res.data.user[0].user);
 
-        setCurrentUser(res.data.user);
+        setCurrentUser(res.data.user[0].user);
         // console.log(res.data.user)
         setBankList(res.data.userBankData);
       } catch (error) {
@@ -40,52 +40,72 @@ function Profile() {
 
   // console.log(currentUser);
   // console.log(bankList);
-  const handleBackClick = () => {
-    navigate("/login/admin/dashboard");
-  };
+
   return (
     <Card
-      style={{
-        width: "24rem",
-        margin: "2rem auto",
-        boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-      }}
+      className="my-4 mx-auto shadow rounded border-0"
+      style={{ width: "28rem" }}
     >
-      <Card.Header as="h5" className="text-center">
+      <Card.Header
+        as="h5"
+        className="text-center text-white bg-primary bg-gradient fw-semibold"
+      >
         User Details
       </Card.Header>
+
       <ListGroup variant="flush">
-        <ListGroup.Item>
+        <ListGroup.Item className="border-bottom">
           <strong>ID:</strong> {currentUser._id}
         </ListGroup.Item>
-        <ListGroup.Item>
+        <ListGroup.Item className="border-bottom">
           <strong>Username:</strong> {currentUser.username}
         </ListGroup.Item>
-        <ListGroup.Item>
+        <ListGroup.Item className="border-bottom">
           <strong>Email:</strong> {currentUser.email}
         </ListGroup.Item>
-        {bankList.map((item, index) => {
-          return (
-            <BankDetails
-              key={item._id}
-              accountNumber={item.accountNumber}
-              ifscCode={item.ifscCode}
-              branchName={item.branchName}
-              bankName={item.bankName}
-              accountHolderName={item.accountHolderName}
-            />
-          );
-        })}
+
+        <ListGroup.Item className="p-0 border-0">
+          <div
+            className="overflow-auto bg-light"
+            style={{
+              maxHeight: "350px",
+              borderTop: "1px solid #dee2e6",
+            }}
+          >
+            {bankList.length > 0 ? (
+              bankList.map((item, index) => (
+                <div
+                  key={item._id}
+                  className={`border-bottom px-3 py-2 ${
+                    index % 2 === 0 ? "bg-white" : "bg-light"
+                  }`}
+                >
+                  <BankDetails
+                    accountNumber={item.accountNumber}
+                    ifscCode={item.ifscCode}
+                    branchName={item.branchName}
+                    bankName={item.bankName}
+                    accountHolderName={item.accountHolderName}
+                  />
+                </div>
+              ))
+            ) : (
+              <div className="p-3 text-center">No Bank Details Found.</div>
+            )}
+          </div>
+        </ListGroup.Item>
       </ListGroup>
-      <Card>
+
+      <Card.Footer className="text-center bg-primary bg-gradient">
         <Button
-          variant="primary"
           onClick={() => navigate("/login/admin/dashboard/user")}
-          className="mx-2"
+          variant="outline-light"
+          size="md"
+          className="rounded-pill fw-semibold px-4"
         >
           Go Back
         </Button>
-      </Card>
+      </Card.Footer>
     </Card>
   );
 }

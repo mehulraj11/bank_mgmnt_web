@@ -22,15 +22,48 @@ function Users({ id, username, email }) {
     }
   };
   return (
-    <Card className="mb-3 shadow-sm">
+    <Card
+      className="mb-3 shadow-sm"
+      style={{
+        border: "none",
+        borderRadius: "1rem",
+        overflow: "hidden",
+        background: "linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)",
+        boxShadow: "0 5px 20px rgba(0, 0, 0, 0.05)",
+      }}
+    >
       <Card.Body className="d-flex justify-content-between align-items-center">
         <div>
-          <Card.Title>{username}</Card.Title>
-          <Card.Subtitle className="mb-1 text-muted">ID: {id}</Card.Subtitle>
-          <Card.Text className="mb-0">Email: {email}</Card.Text>
+          <Card.Title
+            style={{
+              marginBottom: "0.2rem",
+              fontWeight: "600",
+              color: "#4e54c8",
+            }}
+          >
+            {username.toUpperCase()}
+          </Card.Title>
+          <Card.Subtitle
+            className="mb-1 text-muted"
+            style={{ fontSize: "0.9rem" }}
+          >
+            ID: {id}
+          </Card.Subtitle>
+          <Card.Text
+            className="mb-0"
+            style={{ fontSize: "0.95rem", color: "#555" }}
+          >
+            Email: {email}
+          </Card.Text>
         </div>
-        <div className="d-flex gap-3">
-          <Button variant="primary" size="md" onClick={handleViewClick}>
+
+        <div className="d-flex gap-2">
+          <Button
+            onClick={handleViewClick}
+            variant="outline-primary"
+            size="md"
+            className="rounded-pill fw-semibold px-4"
+          >
             View
           </Button>
         </div>
