@@ -1,7 +1,9 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
-function AddBank({ handleAddBankClick }) {
+import { useNavigate } from "react-router-dom";
+function AddBank({ handleAddBankClick, onAddSuccess, setShowAddBank }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     accountNumber: "",
     accountHolderName: "",
@@ -21,7 +23,7 @@ function AddBank({ handleAddBankClick }) {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      await axios.post(
+      const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/bank/add`,
         formData,
         {
@@ -30,6 +32,10 @@ function AddBank({ handleAddBankClick }) {
           },
         }
       );
+      alert("Bank Added Succesfully");
+      const newBank = response.data;
+      setShowAddBank(false);
+      onAddSuccess(newBank);
     } catch (error) {
       console.log(error.message);
     }

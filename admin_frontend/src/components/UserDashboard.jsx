@@ -47,6 +47,10 @@ function UserDashboard() {
       prevBankList.filter((bank) => bank._id !== deletedId)
     );
   };
+  const handleAddSuccess = (newBank) => {
+    setBankList((prevBankList) => [...prevBankList, newBank]);
+  };
+
   return (
     <>
       {bank && <h2 className="text-center">Bank Deatils</h2>}
@@ -56,7 +60,13 @@ function UserDashboard() {
         </Button>
       </div>
 
-      {showAddBank && <AddBank handleAddBankClick={handleAddBankClick} />}
+      {showAddBank && (
+        <AddBank
+          handleAddBankClick={handleAddBankClick}
+          onAddSuccess={handleAddSuccess}
+          setShowAddBank={setShowAddBank}
+        />
+      )}
       <div style={{ maxHeight: "500px", overflowY: "auto" }}>
         {!showAddBank &&
           bankList.map((item) => (
@@ -68,7 +78,7 @@ function UserDashboard() {
               bankName={item.bankName}
               branchName={item.branchName}
               ifscCode={item.ifscCode}
-              onDeleteSuccess={handleDeleteSuccess} 
+              onDeleteSuccess={handleDeleteSuccess}
             />
           ))}
       </div>
