@@ -4,15 +4,19 @@ import axios from "axios";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
+import { Spinner , Container} from "react-bootstrap";
 import BankDetails from "../User/BankDetails";
 function Profile() {
   const navigate = useNavigate();
   const { userId } = useParams();
   const [currentUser, setCurrentUser] = useState({});
   const [bankList, setBankList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // loading state
 
   useEffect(() => {
     const fetchUser = async () => {
+      setIsLoading(true);
+
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
@@ -30,6 +34,8 @@ function Profile() {
         setBankList(res.data.userBankData);
       } catch (error) {
         console.error("Fetch user error:", error.message);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -40,7 +46,18 @@ function Profile() {
 
   // console.log(currentUser);
   // console.log(bankList);
-
+  if (isLoading) {
+    return (
+      <Container className="d-flex justify-content-center align-items-center min-vh-100">
+        <div className="text-center">
+          <Spinner animation="border" role="status" variant="primary" size="lg">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+          <p className="mt-3 text-muted">Loading User and Bank...</p>
+        </div>
+      </Container>
+    );
+  }
   return (
     <Card
       className="my-4 mx-auto shadow rounded border-0"

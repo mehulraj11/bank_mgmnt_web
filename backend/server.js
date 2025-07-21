@@ -10,7 +10,7 @@ dotenv.config();
 const app = express();
 connectDB();
 const allowedOrigins = [
-    "https://localhost:5173",
+    "http://localhost:5173",
     "https://bank-mgmnt-mhvats.onrender.com"
 ]
 app.use(cors({

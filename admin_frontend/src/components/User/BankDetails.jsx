@@ -1,7 +1,8 @@
-import React from "react";
-import { Container, Card, Row, Col, Button } from "react-bootstrap";
+import React, { useState } from "react";
+import { Container, Card, Row, Col, Button, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 function BankDetails({
   id,
   accountHolderName,
@@ -11,24 +12,34 @@ function BankDetails({
   ifscCode,
   onDeleteSuccess,
 }) {
+  const [isDeleting, setIsDeleting] = useState(false);
   const role = localStorage.getItem("role");
   const navigate = useNavigate();
+
   const handleUpdate = (id) => {
     navigate(`/login/user/dashboard/update/${id}`);
   };
+
   const handleDelete = async (id) => {
-    try {
-      const token = localStorage.getItem("token");
-      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/bank/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      onDeleteSuccess(id);
-    } catch (error) {
-      console.error("Delete user error:", error.message);
+    if (window.confirm("Are you sure you want to delete this bank account?")) {
+      setIsDeleting(true);
+      try {
+        const token = localStorage.getItem("token");
+        await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/bank/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        onDeleteSuccess(id);
+      } catch (error) {
+        console.error("Delete user error:", error.message);
+        alert("Failed to delete bank account. Please try again.");
+      } finally {
+        setIsDeleting(false);
+      }
     }
   };
+
   return (
     <Container className="mt-4">
       <Card className="shadow rounded-4 border-0 overflow-hidden">
@@ -71,6 +82,7 @@ function BankDetails({
                 size="md"
                 className="rounded-pill fw-semibold px-4 mx-2"
                 onClick={() => handleUpdate(id)}
+                disabled={isDeleting}
               >
                 Update
               </Button>
@@ -79,8 +91,23 @@ function BankDetails({
                 size="md"
                 className="rounded-pill fw-semibold px-4 mx-2"
                 onClick={() => handleDelete(id)}
+                disabled={isDeleting}
               >
-                Delete
+                {isDeleting ? (
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      className="me-2"
+                    />
+                    Deleting...
+                  </>
+                ) : (
+                  "Delete"
+                )}
               </Button>
             </div>
           )}

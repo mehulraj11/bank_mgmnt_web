@@ -1,7 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Container, Card, Form, Button, Row, Col } from "react-bootstrap";
+import {
+  Container,
+  Card,
+  Form,
+  Button,
+  Row,
+  Col,
+  Spinner,
+} from "react-bootstrap";
 
 function UpdateBank() {
   const [fetchedBankDetails, setFetchedBankDetails] = useState({});
@@ -12,11 +20,15 @@ function UpdateBank() {
     branchName: "",
     ifscCode: "",
   });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchBank = async () => {
+      setIsLoading(true);
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
@@ -30,10 +42,12 @@ function UpdateBank() {
         setFetchedBankDetails(response.data.bankData);
       } catch (error) {
         console.log(error.message);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchBank();
-  }, []);
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,7 +59,8 @@ function UpdateBank() {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    // console.log(updatedData);
+    setIsUpdating(true);
+
     try {
       const token = localStorage.getItem("token");
       const response = await axios.patch(
@@ -63,8 +78,23 @@ function UpdateBank() {
     } catch (error) {
       console.log(error.message);
       alert("Failed to update bank details");
+    } finally {
+      setIsUpdating(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <Container className="d-flex justify-content-center align-items-center min-vh-100">
+        <div className="text-center">
+          <Spinner animation="border" role="status" variant="primary" size="lg">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+          <p className="mt-3 text-muted">Loading bank details...</p>
+        </div>
+      </Container>
+    );
+  }
 
   return (
     <Container className="my-5">
@@ -98,8 +128,10 @@ function UpdateBank() {
                 value={updatedData.accountNumber}
                 onChange={handleChange}
                 className="rounded-pill px-3 py-2"
+                disabled={isUpdating}
               />
             </Form.Group>
+
             <Form.Group as={Row} className="mb-3">
               <Form.Label column sm="4" className="fw-semibold">
                 Previous Account Holder Name:
@@ -123,8 +155,10 @@ function UpdateBank() {
                 value={updatedData.accountHolderName}
                 onChange={handleChange}
                 className="rounded-pill px-3 py-2"
+                disabled={isUpdating}
               />
             </Form.Group>
+
             <Form.Group as={Row} className="mb-3">
               <Form.Label column sm="4" className="fw-semibold">
                 Previous Bank Name:
@@ -146,8 +180,10 @@ function UpdateBank() {
                 value={updatedData.bankName}
                 onChange={handleChange}
                 className="rounded-pill px-3 py-2"
+                disabled={isUpdating}
               />
             </Form.Group>
+
             <Form.Group as={Row} className="mb-3">
               <Form.Label column sm="4" className="fw-semibold">
                 Previous Branch Name:
@@ -160,6 +196,7 @@ function UpdateBank() {
                 />
               </Col>
             </Form.Group>
+
             <Form.Group className="mb-3">
               <Form.Label className="fw-semibold">New Branch Name:</Form.Label>
               <Form.Control
@@ -168,8 +205,10 @@ function UpdateBank() {
                 value={updatedData.branchName}
                 onChange={handleChange}
                 className="rounded-pill px-3 py-2"
+                disabled={isUpdating}
               />
             </Form.Group>
+
             <Form.Group as={Row} className="mb-3">
               <Form.Label column sm="4" className="fw-semibold">
                 Previous IFSC Code:
@@ -182,6 +221,7 @@ function UpdateBank() {
                 />
               </Col>
             </Form.Group>
+
             <Form.Group className="mb-4">
               <Form.Label className="fw-semibold">New IFSC Code:</Form.Label>
               <Form.Control
@@ -190,16 +230,33 @@ function UpdateBank() {
                 value={updatedData.ifscCode}
                 onChange={handleChange}
                 className="rounded-pill px-3 py-2"
+                disabled={isUpdating}
               />
             </Form.Group>
+
             <div className="text-center">
               <Button
                 type="submit"
                 variant="success"
                 size="md"
                 className="rounded-pill px-4 fw-semibold"
+                disabled={isUpdating}
               >
-                Update Bank Details
+                {isUpdating ? (
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      className="me-2"
+                    />
+                    Updating...
+                  </>
+                ) : (
+                  "Update Bank Details"
+                )}
               </Button>
             </div>
           </Form>

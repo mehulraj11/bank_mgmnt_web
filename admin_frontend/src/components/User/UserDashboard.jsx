@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Spinner, Container } from "react-bootstrap";
 import AddBank from "./AddBank";
 import BankDetails from "./BankDetails";
 import axios from "axios";
@@ -9,13 +9,18 @@ function UserDashboard() {
   const [bankList, setBankList] = useState([]);
   const [bank, setBank] = useState(false);
   const [showAddBank, setShowAddBank] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+
   const handleAddBankClick = () => {
     setShowAddBank(!showAddBank);
   };
+
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem("token");
+      setIsLoading(true);
+
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/bank/all`,
@@ -28,32 +33,48 @@ function UserDashboard() {
         setBankList(response.data.data);
         setBank(true);
         console.log(response);
-
         console.log(bankList);
       } catch (error) {
         console.log(error.message);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchData();
   }, []);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
-
     navigate("/login");
   };
+
   const handleDeleteSuccess = (deletedId) => {
     setBankList((prevBankList) =>
       prevBankList.filter((bank) => bank._id !== deletedId)
     );
   };
+
   const handleAddSuccess = (newBank) => {
     setBankList((prevBankList) => [...prevBankList, newBank]);
   };
 
+  if (isLoading) {
+    return (
+      <Container className="d-flex justify-content-center align-items-center min-vh-100">
+        <div className="text-center">
+          <Spinner animation="border" role="status" variant="primary" size="lg">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+          <p className="mt-3 text-muted">Loading bank details...</p>
+        </div>
+      </Container>
+    );
+  }
+
   return (
     <>
-      {bank && <h2 className="text-center">Bank Deatils</h2>}
+      {bank && <h2 className="text-center">Bank Details</h2>}
       {showAddBank && (
         <AddBank
           handleAddBankClick={handleAddBankClick}

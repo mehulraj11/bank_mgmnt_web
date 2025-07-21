@@ -3,14 +3,18 @@ import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
+import Spinner from "react-bootstrap/Spinner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 function AdminLogin() {
   const navigate = useNavigate();
   const [adminLoginData, setAdminLoginData] = useState({
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setAdminLoginData((prev) => ({
@@ -18,8 +22,11 @@ function AdminLogin() {
       [name]: value,
     }));
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/auth/login`,
@@ -30,18 +37,24 @@ function AdminLogin() {
           },
         }
       );
+
       console.log(res.data.user.role);
+
       if (res.data.user.role === "admin") {
         navigate("/login/admin/dashboard");
       } else {
         navigate("/login/user/dashboard");
       }
+
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.user.role);
     } catch (error) {
       console.log("login error : ", error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
+
   return (
     <Container
       fluid
@@ -58,6 +71,7 @@ function AdminLogin() {
               placeholder="Enter email"
               value={adminLoginData.email}
               onChange={handleChange}
+              disabled={isLoading}
             />
           </Form.Group>
 
@@ -69,11 +83,31 @@ function AdminLogin() {
               placeholder="Password"
               value={adminLoginData.password}
               onChange={handleChange}
+              disabled={isLoading}
             />
           </Form.Group>
 
-          <Button variant="primary" type="submit" className="w-100">
-            Submit
+          <Button
+            variant="primary"
+            type="submit"
+            className="w-100"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                  className="me-2"
+                />
+                Logging in...
+              </>
+            ) : (
+              "Log in"
+            )}
           </Button>
         </Form>
       </Card>

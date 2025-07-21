@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
+import { Spinner } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 function UserLogin() {
@@ -11,6 +12,8 @@ function UserLogin() {
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setAdminLoginData((prev) => ({
@@ -20,6 +23,8 @@ function UserLogin() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/auth/login`,
@@ -40,6 +45,8 @@ function UserLogin() {
       localStorage.setItem("token", res.data.token);
     } catch (error) {
       console.log("login error : ", error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -83,7 +90,21 @@ function UserLogin() {
               type="submit"
               className="w-100 rounded-pill fw-semibold py-2"
             >
-              Sign In
+              {isLoading ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                    className="me-2"
+                  />
+                  Logging in...
+                </>
+              ) : (
+                "Log in"
+              )}
             </Button>
           </Form>
         </Card>

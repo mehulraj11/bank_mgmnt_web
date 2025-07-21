@@ -1,9 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Container, Form, Button } from "react-bootstrap";
+import { Container, Form, Button, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+
 function AddBank({ handleAddBankClick, onAddSuccess, setShowAddBank }) {
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     accountNumber: "",
     accountHolderName: "",
@@ -21,6 +23,8 @@ function AddBank({ handleAddBankClick, onAddSuccess, setShowAddBank }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
@@ -32,16 +36,30 @@ function AddBank({ handleAddBankClick, onAddSuccess, setShowAddBank }) {
           },
         }
       );
-      // const newBank = response.data;
-      // onAddSuccess(newBank);
-      alert("Bank Added Succesfully");
+
+      const newBank = response.data;
+      onAddSuccess(newBank);
+      alert("Bank Added Successfully");
       setShowAddBank(false);
-      // navigate("/login/user/dashboard");
+
+      // Reset form data
+      setFormData({
+        accountNumber: "",
+        accountHolderName: "",
+        ifscCode: "",
+        bankName: "",
+        branchName: "",
+      });
     } catch (error) {
       console.log(error.message);
+      alert("Failed to add bank details. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
+
     console.log("Form Data:", formData);
   };
+
   return (
     <Container className="mt-3">
       <h2>Add Bank Details</h2>
@@ -54,6 +72,8 @@ function AddBank({ handleAddBankClick, onAddSuccess, setShowAddBank }) {
             value={formData.accountNumber}
             onChange={handleChange}
             placeholder="Enter Account Number"
+            disabled={isSubmitting}
+            required
           />
         </Form.Group>
 
@@ -65,6 +85,8 @@ function AddBank({ handleAddBankClick, onAddSuccess, setShowAddBank }) {
             value={formData.accountHolderName}
             onChange={handleChange}
             placeholder="Enter Account Holder Name"
+            disabled={isSubmitting}
+            required
           />
         </Form.Group>
 
@@ -76,6 +98,8 @@ function AddBank({ handleAddBankClick, onAddSuccess, setShowAddBank }) {
             value={formData.ifscCode}
             onChange={handleChange}
             placeholder="Enter IFSC Code"
+            disabled={isSubmitting}
+            required
           />
         </Form.Group>
 
@@ -87,6 +111,8 @@ function AddBank({ handleAddBankClick, onAddSuccess, setShowAddBank }) {
             value={formData.bankName}
             onChange={handleChange}
             placeholder="Enter Bank Name"
+            disabled={isSubmitting}
+            required
           />
         </Form.Group>
 
@@ -98,6 +124,8 @@ function AddBank({ handleAddBankClick, onAddSuccess, setShowAddBank }) {
             value={formData.branchName}
             onChange={handleChange}
             placeholder="Enter Bank Branch"
+            disabled={isSubmitting}
+            required
           />
         </Form.Group>
 
@@ -106,14 +134,31 @@ function AddBank({ handleAddBankClick, onAddSuccess, setShowAddBank }) {
           size="md"
           className="rounded-pill fw-semibold px-4 mx-2"
           type="submit"
+          disabled={isSubmitting}
         >
-          Save Bank Details
+          {isSubmitting ? (
+            <>
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+                className="me-2"
+              />
+              Saving...
+            </>
+          ) : (
+            "Save Bank Details"
+          )}
         </Button>
+
         <Button
           variant="outline-danger"
           size="md"
           className="rounded-pill fw-semibold px-4 mx-2"
           onClick={handleAddBankClick}
+          disabled={isSubmitting}
         >
           Close
         </Button>

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 function LoginHandler() {
   const navigate = useNavigate();
-
+  
   const handleAdminLogin = () => {
     navigate("/login/admin");
   };
